@@ -1,9 +1,6 @@
 import random
 from math import sqrt
 from typing import TypedDict
-from webbrowser import get
-
-from networkx import neighbors
 
 size = 100
 grid_size = size * size
@@ -62,6 +59,7 @@ def get_right(n: int) -> int | None:
     if (n + 1) % grid_side == 0:
         return None
     return n + 1
+
 
 def get_neighbors(n: int) -> list[int]:
     """Returns the list of neighbors for the given element."""
