@@ -8,7 +8,7 @@ from PIL import Image
 # --- Configuration ---
 GRID_SIZE = 100
 TILE_IDS = range(9)
-choosen_distrib = 'normal'  # Change this to select a distribution
+choosen_distrib = "normal"  # Change this to select a distribution
 
 
 # --- Tile Definitions ---
@@ -24,13 +24,15 @@ distributions = {
     "normal": [0, 0.4, 0.25, 0.2, 0.05, 0.05, 0.03, 0.01, 0.01],
     "polarized": [0, 0.4, 0.2, 0.25, 0.05, 0.02, 0.02, 0.01, 0.05],
     "gradient": [0.05, 0.22, 0.15, 0.18, 0.1, 0.08, 0.1, 0.1, 0.02],
-    "custom1":[0, 0.24, 0.2, 0.2, 0.14, 0.05, 0.1, 0.02, 0.05],
+    "custom1": [0, 0.24, 0.2, 0.2, 0.14, 0.05, 0.1, 0.02, 0.05],
     "custom2": [0.01, 0.15, 0.01, 0.02, 0.1, 0.05, 0.1, 0.51, 0.05],
 }
 
 
 for key, value in distributions.items():
-    assert abs(sum(value) - 1.0) < 1e-6, f"Probas must be equal to 1, not {sum(value)} for {key}"
+    assert (
+        abs(sum(value) - 1.0) < 1e-6
+    ), f"Probas must be equal to 1, not {sum(value)} for {key}"
 
 
 TILES: Dict[int, Tile] = {
@@ -42,13 +44,13 @@ TILES: Dict[int, Tile] = {
     5: Tile("desert", 0.05, {1, 5}),
     6: Tile("snow", 0.05, {4, 6}),
     7: Tile("volcano", 0.01, {4, 7}),
-    8: Tile("swamp", 0.01 , {2, 1, 8}),
-} # default distribution, normal
+    8: Tile("swamp", 0.01, {2, 1, 8}),
+}  # default distribution, normal
 
 for tile in TILE_IDS:
-    value =  distributions[choosen_distrib][tile]
+    value = distributions[choosen_distrib][tile]
     TILES[tile].weight = value
-    #print(value)
+    # print(value)
 
 print(sum(tile.weight for tile in TILES.values()))
 
@@ -111,10 +113,9 @@ class World:
     def __init__(self, size: int):
         self.size = size
         self.grid = [[Cell() for _ in range(size)] for _ in range(size)]
-        self.heap = []
-        self.queue = deque()
-        #self.in_heap = [[False for _ in range(self.size)] for _ in range(self.size)]
-
+        self.heap = []  # Min-heap for cells by entropy
+        # self.queue = deque() # Queue for propagation
+        # self.in_heap = [[False for _ in range(self.size)] for _ in range(self.size)]
 
     def in_bounds(self, x: int, y: int) -> bool:
         return 0 <= x < self.size and 0 <= y < self.size
@@ -127,7 +128,7 @@ class World:
     def run(self):
         # Start with one random seed
         sx, sy = random.randint(0, self.size - 1), random.randint(0, self.size - 1)
-        self.queue.append((sx, sy))
+        # self.queue.append((sx, sy))
 
         # Initial heap population
         for y in range(self.size):
@@ -143,7 +144,7 @@ class World:
             if cell.is_collapsed():
                 continue
 
-            neighbor_counts = None # self.count_tile_types_around(x, y)
+            neighbor_counts = None  # self.count_tile_types_around(x, y)
             if not neighbor_counts:
                 chosen_tile = cell.collapse()
             else:
@@ -163,7 +164,6 @@ class World:
                 if neighbor.is_collapsed():
                     continue
 
-                before = neighbor.domain
                 new_domain = 0
 
                 for t in cell.get_possible_ids():
@@ -178,11 +178,11 @@ class World:
                         raise Exception(f"Contradiction at ({nx}, {ny})")
                     queue.append((nx, ny))
                     # enqueue updated entropy
-                    #if not self.in_heap[ny][nx]:
-                     #   self.in_heap[ny][nx] = True
+                    # if not self.in_heap[ny][nx]:
+                    #   self.in_heap[ny][nx] = True
                     heapq.heappush(
-                            self.heap, (neighbor.entropy(), random.random(), nx, ny)
-                        )
+                        self.heap, (neighbor.entropy(), random.random(), nx, ny)
+                    )
 
     def count_tile_types_around(self, x: int, y: int) -> dict[int, int]:
         counts = {}
@@ -192,6 +192,7 @@ class World:
                 tid = cell.get_possible_ids()[0]
                 counts[tid] = counts.get(tid, 0) + 1
         return counts
+
 
 def post_process_cleaner(world, iterations=3):
     size = world.size
@@ -217,8 +218,7 @@ def post_process_cleaner(world, iterations=3):
 
                 # Count neighbors' tile types
                 neighbor_tiles = [
-                    world.grid[ny][nx].get_possible_ids()[0]
-                    for nx, ny in neighbors
+                    world.grid[ny][nx].get_possible_ids()[0] for nx, ny in neighbors
                 ]
                 tile_counts = {}
                 for t in neighbor_tiles:
@@ -228,13 +228,17 @@ def post_process_cleaner(world, iterations=3):
                 current_tile = cell.get_possible_ids()[0]
 
                 # If current tile differs from majority and majority is strong enough, flip it
-                if current_tile != majority_tile and tile_counts[majority_tile] >= len(neighbors) // 2 + 1:
+                if (
+                    current_tile != majority_tile
+                    and tile_counts[majority_tile] >= len(neighbors) // 2 + 1
+                ):
                     new_domains[y][x] = 1 << majority_tile
 
         # Apply changes after checking whole grid
         for y in range(size):
             for x in range(size):
                 world.grid[y][x].domain = new_domains[y][x]
+
 
 def post_process_cleaner_respecting_rules(world, iterations=3):
     size = world.size
@@ -287,14 +291,16 @@ def post_process_cleaner_respecting_rules(world, iterations=3):
                         majority_allowed = False
                         break
 
-                if majority_allowed and tile_counts[majority_tile] >= len(neighbor_tiles) // 2 + 1:
+                if (
+                    majority_allowed
+                    and tile_counts[majority_tile] >= len(neighbor_tiles) // 2 + 1
+                ):
                     new_domains[y][x] = 1 << majority_tile
 
         # Apply new domains
         for y in range(size):
             for x in range(size):
                 world.grid[y][x].domain = new_domains[y][x]
-
 
 
 # --- Output ---
