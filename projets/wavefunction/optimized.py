@@ -8,27 +8,49 @@ from PIL import Image
 # --- Configuration ---
 GRID_SIZE = 100
 TILE_IDS = range(9)
+choosen_distrib = 'normal'  # Change this to select a distribution
 
 
 # --- Tile Definitions ---
 class Tile:
-    def __init__(self, name: str, weight: float, neighbors: List[int]):
-        self.name = name
-        self.weight = weight
-        self.neighbors = neighbors  # List of valid adjacent tile IDs
+    def __init__(self, name: str, weight: float, neighbors: set[int]):
+        self.name: str = name
+        self.weight: float = weight
+        self.neighbors: set[int] = neighbors  # Set of valid adjacent tile IDs
+
+
+distributions = {
+    "uniform": [0.1 for _ in TILE_IDS] + [0.1],
+    "normal": [0, 0.4, 0.25, 0.2, 0.05, 0.05, 0.03, 0.01, 0.01],
+    "polarized": [0, 0.4, 0.2, 0.25, 0.05, 0.02, 0.02, 0.01, 0.05],
+    "gradient": [0.05, 0.22, 0.15, 0.18, 0.1, 0.08, 0.1, 0.1, 0.02],
+    "custom1":[0, 0.24, 0.2, 0.2, 0.14, 0.05, 0.1, 0.02, 0.05],
+    "custom2": [0.01, 0.15, 0.01, 0.02, 0.1, 0.05, 0.1, 0.51, 0.05],
+}
+
+
+for key, value in distributions.items():
+    assert abs(sum(value) - 1.0) < 1e-6, f"Probas must be equal to 1, not {sum(value)} for {key}"
 
 
 TILES: Dict[int, Tile] = {
-    0: Tile("empty", 0.01, [0]),
-    1: Tile("grass", 0.26, [1, 3, 2, 4]),
-    2: Tile("water", 0.15, [2, 1, 8]),
-    3: Tile("forest", 0.20, [1, 3, 4]),
-    4: Tile("mountain", 0.10, [3, 4, 6]),
-    5: Tile("desert", 0.08, [1, 5]),
-    6: Tile("snow", 0.07, [4, 6]),
-    7: Tile("volcano", 0.01, [4, 7]),
-    8: Tile("swamp", 0.03, [2, 1, 8]),
-}
+    0: Tile("empty", 0, {0}),
+    1: Tile("grass", 0.45, {1, 3, 2, 4}),
+    2: Tile("water", 0.18, {2, 1, 8}),
+    3: Tile("forest", 0.2, {1, 3, 4}),
+    4: Tile("mountain", 0.05, {3, 4, 6}),
+    5: Tile("desert", 0.05, {1, 5}),
+    6: Tile("snow", 0.05, {4, 6}),
+    7: Tile("volcano", 0.01, {4, 7}),
+    8: Tile("swamp", 0.01 , {2, 1, 8}),
+} # default distribution, normal
+
+for tile in TILE_IDS:
+    value =  distributions[choosen_distrib][tile]
+    TILES[tile].weight = value
+    #print(value)
+
+print(sum(tile.weight for tile in TILES.values()))
 
 TILE_COLOR_RGB = {
     0: (40, 40, 40),  # empty (dark grey)
@@ -69,6 +91,20 @@ class Cell:
         self.collapsed = True
         return chosen
 
+    def collapse_with_bias(self, neighbor_counts: dict[int, int]) -> int:
+        options = self.get_possible_ids()
+        raw_weights = [TILES[t].weight for t in options]
+
+        biased_weights = [
+            raw_weights[i] + 0.3 * neighbor_counts.get(options[i], 0)
+            for i in range(len(options))
+        ]
+
+        chosen = random.choices(options, weights=biased_weights, k=1)[0]
+        self.domain = 1 << chosen
+        self.collapsed = True
+        return chosen
+
 
 # --- World State ---
 class World:
@@ -77,6 +113,8 @@ class World:
         self.grid = [[Cell() for _ in range(size)] for _ in range(size)]
         self.heap = []
         self.queue = deque()
+        #self.in_heap = [[False for _ in range(self.size)] for _ in range(self.size)]
+
 
     def in_bounds(self, x: int, y: int) -> bool:
         return 0 <= x < self.size and 0 <= y < self.size
@@ -105,7 +143,12 @@ class World:
             if cell.is_collapsed():
                 continue
 
-            chosen_tile = cell.collapse()
+            neighbor_counts = None # self.count_tile_types_around(x, y)
+            if not neighbor_counts:
+                chosen_tile = cell.collapse()
+            else:
+                chosen_tile = cell.collapse_with_bias(neighbor_counts)
+
             self.propagate(x, y, chosen_tile)
 
     def propagate(self, x: int, y: int, tile_id: int):
@@ -135,9 +178,123 @@ class World:
                         raise Exception(f"Contradiction at ({nx}, {ny})")
                     queue.append((nx, ny))
                     # enqueue updated entropy
+                    #if not self.in_heap[ny][nx]:
+                     #   self.in_heap[ny][nx] = True
                     heapq.heappush(
-                        self.heap, (neighbor.entropy(), random.random(), nx, ny)
-                    )
+                            self.heap, (neighbor.entropy(), random.random(), nx, ny)
+                        )
+
+    def count_tile_types_around(self, x: int, y: int) -> dict[int, int]:
+        counts = {}
+        for nx, ny in self.neighbors(x, y):
+            cell = self.grid[ny][nx]
+            if cell.is_collapsed():
+                tid = cell.get_possible_ids()[0]
+                counts[tid] = counts.get(tid, 0) + 1
+        return counts
+
+def post_process_cleaner(world, iterations=3):
+    size = world.size
+
+    for _ in range(iterations):
+        # Make a copy of current states to avoid influencing this iteration
+        new_domains = [[cell.domain for cell in row] for row in world.grid]
+
+        for y in range(size):
+            for x in range(size):
+                cell = world.grid[y][x]
+                if not cell.is_collapsed():
+                    continue
+
+                neighbors = [
+                    (nx, ny)
+                    for nx, ny in world.neighbors(x, y)
+                    if world.grid[ny][nx].is_collapsed()
+                ]
+
+                if not neighbors:
+                    continue
+
+                # Count neighbors' tile types
+                neighbor_tiles = [
+                    world.grid[ny][nx].get_possible_ids()[0]
+                    for nx, ny in neighbors
+                ]
+                tile_counts = {}
+                for t in neighbor_tiles:
+                    tile_counts[t] = tile_counts.get(t, 0) + 1
+
+                majority_tile = max(tile_counts, key=tile_counts.get)
+                current_tile = cell.get_possible_ids()[0]
+
+                # If current tile differs from majority and majority is strong enough, flip it
+                if current_tile != majority_tile and tile_counts[majority_tile] >= len(neighbors) // 2 + 1:
+                    new_domains[y][x] = 1 << majority_tile
+
+        # Apply changes after checking whole grid
+        for y in range(size):
+            for x in range(size):
+                world.grid[y][x].domain = new_domains[y][x]
+
+def post_process_cleaner_respecting_rules(world, iterations=3):
+    size = world.size
+
+    for _ in range(iterations):
+        # Copy current domains to allow batch updates
+        new_domains = [[cell.domain for cell in row] for row in world.grid]
+
+        for y in range(size):
+            for x in range(size):
+                cell = world.grid[y][x]
+                if not cell.is_collapsed():
+                    continue
+
+                current_tile = cell.get_possible_ids()[0]
+
+                # Get collapsed neighbors
+                neighbor_coords = [
+                    (nx, ny)
+                    for nx, ny in world.neighbors(x, y)
+                    if world.grid[ny][nx].is_collapsed()
+                ]
+
+                if not neighbor_coords:
+                    continue
+
+                neighbor_tiles = [
+                    world.grid[ny][nx].get_possible_ids()[0]
+                    for nx, ny in neighbor_coords
+                ]
+
+                # Count tile types around
+                tile_counts = {}
+                for tid in neighbor_tiles:
+                    tile_counts[tid] = tile_counts.get(tid, 0) + 1
+
+                # Most common neighbor tile
+                majority_tile = max(tile_counts, key=tile_counts.get)
+                if majority_tile == current_tile:
+                    continue  # already matches
+
+                # Check if this majority tile can validly replace current one
+                majority_allowed = True
+                for nx, ny in neighbor_coords:
+                    neighbor_tile = world.grid[ny][nx].get_possible_ids()[0]
+                    if (
+                        majority_tile not in TILES[neighbor_tile].neighbors
+                        or neighbor_tile not in TILES[majority_tile].neighbors
+                    ):
+                        majority_allowed = False
+                        break
+
+                if majority_allowed and tile_counts[majority_tile] >= len(neighbor_tiles) // 2 + 1:
+                    new_domains[y][x] = 1 << majority_tile
+
+        # Apply new domains
+        for y in range(size):
+            for x in range(size):
+                world.grid[y][x].domain = new_domains[y][x]
+
 
 
 # --- Output ---
@@ -176,6 +333,7 @@ if __name__ == "__main__":
     world = World(GRID_SIZE)
     try:
         world.run()
+        post_process_cleaner_respecting_rules(world, iterations=5)
         export_image(world, pixel_size=8, filename="wfc_map.jpg")
     except Exception as e:
         print(f"[ERROR] Generation failed: {e}")
