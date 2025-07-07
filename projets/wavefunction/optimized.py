@@ -1,14 +1,20 @@
 import heapq
 import random
 from collections import deque
+from functools import lru_cache
+from time import perf_counter, perf_counter_ns
 from typing import Dict, List, Tuple
 
 from PIL import Image
 
+from profiler import profile_with_memory
+
 # --- Configuration ---
-GRID_SIZE = 100
+GRID_SIZE = 300
 TILE_IDS = range(9)
 choosen_distrib = "normal"  # Change this to select a distribution
+
+COUNTER = 0
 
 
 # --- Tile Definitions ---
@@ -69,15 +75,17 @@ TILE_COLOR_RGB = {
 
 DIRECTIONS = [(0, -1), (0, 1), (-1, 0), (1, 0)]
 
+BITMASK = (1 << len(TILES)) - 1
+
 
 # --- Grid Cell Representation ---
 class Cell:
     def __init__(self):
-        self.domain = (1 << len(TILES)) - 1  # Bitmask of possible tiles (all set)
+        self.domain = BITMASK  # Bitmask of possible tiles (all set)
         self.collapsed = False
 
-    def is_collapsed(self) -> bool:
-        return bin(self.domain).count("1") == 1
+    #def is_collapsed(self) -> bool:
+    #    return bin(self.domain).count("1") == 1
 
     def entropy(self) -> int:
         return bin(self.domain).count("1")
@@ -110,21 +118,25 @@ class Cell:
 
 # --- World State ---
 class World:
-    def __init__(self, size: int):
-        self.size = size
-        self.grid = [[Cell() for _ in range(size)] for _ in range(size)]
+    def __init__(self, size: int = 100):
+        self.size = GRID_SIZE
+        self.grid = [[Cell() for _ in range(self.size)] for _ in range(self.size)]
         self.heap = []  # Min-heap for cells by entropy
         # self.queue = deque() # Queue for propagation
         # self.in_heap = [[False for _ in range(self.size)] for _ in range(self.size)]
+        self.counter = 0
 
+    @lru_cache(maxsize=GRID_SIZE * GRID_SIZE)
     def in_bounds(self, x: int, y: int) -> bool:
         return 0 <= x < self.size and 0 <= y < self.size
 
+    @lru_cache(maxsize=GRID_SIZE * GRID_SIZE)
     def neighbors(self, x: int, y: int) -> List[Tuple[int, int]]:
         return [
             (x + dx, y + dy) for dx, dy in DIRECTIONS if self.in_bounds(x + dx, y + dy)
         ]
 
+    #@profile_with_memory
     def run(self):
         # Start with one random seed
         sx, sy = random.randint(0, self.size - 1), random.randint(0, self.size - 1)
@@ -133,20 +145,21 @@ class World:
         # Initial heap population
         for y in range(self.size):
             for x in range(self.size):
-                if not self.grid[y][x].is_collapsed():
+                if not self.grid[y][x].collapsed:
                     entropy = self.grid[y][x].entropy()
                     heapq.heappush(self.heap, (entropy, random.random(), x, y))
 
         while self.heap:
             _, _, x, y = heapq.heappop(self.heap)
-            cell = self.grid[y][x]
+            cell: Cell = self.grid[y][x]
 
-            if cell.is_collapsed():
+            if cell.collapsed:
                 continue
 
             neighbor_counts = None  # self.count_tile_types_around(x, y)
             if not neighbor_counts:
                 chosen_tile = cell.collapse()
+                self.counter += 1
             else:
                 chosen_tile = cell.collapse_with_bias(neighbor_counts)
 
@@ -161,7 +174,7 @@ class World:
 
             for nx, ny in self.neighbors(cx, cy):
                 neighbor = self.grid[ny][nx]
-                if neighbor.is_collapsed():
+                if neighbor.collapsed:
                     continue
 
                 new_domain = 0
@@ -188,7 +201,7 @@ class World:
         counts = {}
         for nx, ny in self.neighbors(x, y):
             cell = self.grid[ny][nx]
-            if cell.is_collapsed():
+            if cell.collapsed:
                 tid = cell.get_possible_ids()[0]
                 counts[tid] = counts.get(tid, 0) + 1
         return counts
@@ -203,14 +216,14 @@ def post_process_cleaner(world, iterations=3):
 
         for y in range(size):
             for x in range(size):
-                cell = world.grid[y][x]
-                if not cell.is_collapsed():
+                cell: Cell = world.grid[y][x]
+                if not cell.collapsed:
                     continue
 
                 neighbors = [
                     (nx, ny)
                     for nx, ny in world.neighbors(x, y)
-                    if world.grid[ny][nx].is_collapsed()
+                    if world.grid[ny][nx].collapsed
                 ]
 
                 if not neighbors:
@@ -249,8 +262,8 @@ def post_process_cleaner_respecting_rules(world, iterations=3):
 
         for y in range(size):
             for x in range(size):
-                cell = world.grid[y][x]
-                if not cell.is_collapsed():
+                cell: Cell = world.grid[y][x]
+                if not cell.collapsed:
                     continue
 
                 current_tile = cell.get_possible_ids()[0]
@@ -259,7 +272,7 @@ def post_process_cleaner_respecting_rules(world, iterations=3):
                 neighbor_coords = [
                     (nx, ny)
                     for nx, ny in world.neighbors(x, y)
-                    if world.grid[ny][nx].is_collapsed()
+                    if world.grid[ny][nx].collapsed
                 ]
 
                 if not neighbor_coords:
@@ -307,7 +320,7 @@ def post_process_cleaner_respecting_rules(world, iterations=3):
 def print_world(world: World):
     for row in world.grid:
         line = " ".join(
-            TILES[cell.get_possible_ids()[0]].name[0] if cell.is_collapsed() else "?"
+            TILES[cell.get_possible_ids()[0]].name[0] if cell.collapsed else "?"
             for cell in row
         )
         print(line)
@@ -320,7 +333,7 @@ def export_image(world: World, pixel_size=10, filename="wfc_output.jpg"):
     for y in range(size):
         for x in range(size):
             cell = world.grid[y][x]
-            if cell.is_collapsed():
+            if cell.collapsed:
                 tile_id = cell.get_possible_ids()[0]
                 color = TILE_COLOR_RGB[tile_id]
             else:
@@ -336,10 +349,14 @@ def export_image(world: World, pixel_size=10, filename="wfc_output.jpg"):
 
 # --- Run the WFC ---
 if __name__ == "__main__":
-    world = World(GRID_SIZE)
+    world = World()
     try:
+        t1 = perf_counter()
         world.run()
+        t2 = perf_counter()
+        print(t2 - t1)
         post_process_cleaner_respecting_rules(world, iterations=5)
         export_image(world, pixel_size=8, filename="wfc_map.jpg")
+        print(world.counter)
     except Exception as e:
         print(f"[ERROR] Generation failed: {e}")

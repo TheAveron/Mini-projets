@@ -1,0 +1,158 @@
+{
+    "normal_cards": {
+        "ships": [
+            {
+                "name": "Light Freighter",
+                "type": "ship",
+                "cost": {
+                    "money": 2
+                },
+                "range": 2,
+                "cargo": 3,
+                "effect": "Does nothing more than carryig ressources",
+                "flavor": "The workhorse of the outer system trade routes.",
+                "amount": 10
+            },
+            {
+                "name": "Light people carrier",
+                "type": "ship",
+                "cost": {
+                    "money": 4
+                },
+                "range": 1,
+                "effect": "Does nothing more than carryig people",
+                "flavor": "",
+                "amount": 10
+            }
+        ],
+        "infrastructure": [
+            {
+                "name": "Habitat Module",
+                "type": "infrastructure",
+                "cost": {
+                    "money": 6,
+                    "population": 2,
+                    "size": 1
+                },
+                "effect": "Gain 1 Population each turn if placed on a colonized Planet.",
+                "flavor": "Home away from home, with 0.3g gravity and filtered views of Saturn's rings."
+            },
+            {
+                "name": "Transport Grid",
+                "type": "infrastructure",
+                "cost": {
+                    "money": 15,
+                    "population": 10,
+                    "size": 3
+                },
+                "effect": "For each pair of habitat in the planet, gain +1 population (and when new pairs of habitat are cnstructed)",
+                "limit": "One per Planet",
+                "flavor": ""
+            }
+        ],
+        "mission": [
+            {
+                "name": "Moon Water Rush",
+                "type": "mission",
+                "objective": "Deliver 2 Water units to Luna",
+                "reward": {
+                    "influence": 3,
+                    "tech_card": 1
+                },
+                "flavor": "Water is the new oil—and Lunar deposits are booming."
+            }
+        ],
+        "astronaut": [
+            {
+                "name": "Rover Pilot",
+                "type": "astronaut",
+                "cost": {
+                    "money": 3
+                },
+                "effect": "May reroll 1 failed exploration attempt per turn.",
+                "flavor": "If it's dusty, broken, and on fire — that's when I shine."
+            }
+        ]
+    },
+    "companies": {
+        "Sipre": [
+            {
+                "name": "Survey Shuttle NX-1",
+                "type": "ship",
+                "cost": {
+                    "money": 0
+                },
+                "range": 1,
+                "effect": "Gain 1 Exploration Point each time a new Planet is discovered.",
+                "flavor": "First in, last out. Always."
+            },
+            {
+                "name": "Founder's Bonus",
+                "type": "company_effect",
+                "effect": "At the beginning of game, take 5 additional SpaceCoins and draw 1 Tech card.",
+                "flavor": "Startup capital never hurt anyone."
+            },
+            {
+                "name": "Orbital Data Grid",
+                "type": "infrastructure",
+                "effect": "When you accomplish a Mission, gain 1 Influence.",
+                "flavor": "Nothing gets done without the Grid."
+            }
+        ]
+    },
+    "planet_cards": [
+        {
+            "name": "Titan (Saturn Moon)",
+            "type": "planet",
+            "access": "First 3 players to have range 3 rockets",
+            "income": {
+                "rare_materials": 2
+            },
+            "mission_bonus": "+1 SpaceCoin for completing Missions here",
+            "flavor": "Cold, toxic, and deeply profitable."
+        }
+    ],
+    "technology_cards": [
+        {
+            "name": "Quantum Drives",
+            "type": "technology",
+            "cost": {
+                "money": 10
+            },
+            "effect": "All your Ships gain +1 Range.",
+            "flavor": "Fold space, skip traffic."
+        },
+        {
+            "name": "Genetic Uplift Lab",
+            "type": "technology",
+            "cost": {
+                "money": 5,
+                "bases carbonnées": 1
+            },
+            "effect": "Gain 1 extra Population during each Income Phase.",
+            "flavor": "Evolve or die — preferably in the lab."
+        }
+    ],
+    "event_cards": [
+        {
+            "name": "Solar Flare",
+            "type": "event",
+            "duration": "1 turn",
+            "effect": "All Infrastructure abilities are disabled this turn.",
+            "flavor": "When the sun sneezes, we all catch fire."
+        },
+        {
+            "name": "Trade Surge",
+            "type": "event",
+            "duration": "3 turns",
+            "effect": "Mission rewards yield +1 Money.",
+            "flavor": "The stars have never been so open for business."
+        },
+        {
+            "name": "Volcanic Eruption",
+            "type": "event",
+            "duration": "2 turns",
+            "effect": "Each player roll a dice, if the result is 4 or more, they can't launch rockets from this planet"
+        }
+    ]
+}
