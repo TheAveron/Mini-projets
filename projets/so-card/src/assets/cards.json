@@ -4,24 +4,36 @@
             {
                 "name": "Light Freighter",
                 "type": "ship",
+                "tags": [
+                    "Freight",
+                    "Utility",
+                    "Civilian"
+                ],
                 "cost": {
                     "money": 2
                 },
                 "range": 2,
                 "cargo": 3,
-                "effect": "Does nothing more than carryig ressources",
-                "flavor": "The workhorse of the outer system trade routes.",
-                "amount": 10
+                "effect": "Gain 1 extra Material when completing a delivery Mission.\n• If the mission is on Moon: gain +1 Influence.",
+                "flavor": "The workhorse of the inner system trade routes.",
+                "amount": 10,
+                "illustration": "light_freigter.png"
             },
             {
-                "name": "Light people carrier",
+                "name": "Light People Carrier",
                 "type": "ship",
+                "tags": [
+                    "Peoples",
+                    "Utility",
+                    "Civilian"
+                ],
                 "cost": {
-                    "money": 4
+                    "money": 2
                 },
                 "range": 1,
+                "cargo": 1,
                 "effect": "Does nothing more than carryig people",
-                "flavor": "",
+                "flavor": "Built for short trips and daily commutes — nothing more, nothing less.",
                 "amount": 10
             }
         ],
@@ -105,11 +117,19 @@
             "name": "Titan (Saturn Moon)",
             "type": "planet",
             "access": "First 3 players to have range 3 rockets",
+            "tags": [
+                "Outer Planet",
+                "Telluric",
+                "Medium Size"
+            ],
             "income": {
                 "rare_materials": 2
             },
-            "mission_bonus": "+1 SpaceCoin for completing Missions here",
-            "flavor": "Cold, toxic, and deeply profitable."
+            "distance": 3,
+            "size": 10,
+            "effect": "+1 SpaceCoin for completing Missions here",
+            "flavor": "Cold, toxic, and deeply profitable.",
+            "illustration": "titan.png"
         }
     ],
     "technology_cards": [

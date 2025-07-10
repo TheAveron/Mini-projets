@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Carte avec Coût multi-matériaux et icône type</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Inter:wght@400;600&family=Cardo:ital@1&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                margin: 0;
+                background: #eae5dd;
+                font-family: "Inter", sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+            }
+            .card {
+                width: 350px;
+                height: 500px;
+                background: #fdfcf9;
+                border: 1px solid #c4b9a6;
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+            }
+            .card-header {
+                background: #f3efe6;
+                padding: 16px;
+                font-family: "EB Garamond", serif;
+                font-size: 1.5rem;
+                font-weight: 600;
+                color: #3a2e1f;
+                border-bottom: 1px solid #d6cbb7;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                position: relative;
+            }
+            .card-type-icon {
+                width: 32px;
+                height: 32px;
+                margin-right: 12px;
+                flex-shrink: 0;
+                fill: #7c6e50;
+                opacity: 0.85;
+            }
+            .card-title {
+                flex-grow: 1;
+                user-select: none;
+            }
+            .card-cost {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+            }
+            .cost-badge {
+                background: #bba46e;
+                color: #3a2e1f;
+                font-weight: 700;
+                font-size: 0.85rem;
+                padding: 4px 8px;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                box-shadow: inset 0 0 1px #00000022;
+            }
+            .cost-badge svg {
+                width: 18px;
+                height: 18px;
+                margin-right: 4px;
+                fill: #3a2e1f;
+            }
+            .card-art {
+                height: 180px;
+                background-image: url("https://placehold.co/350x180/ddd/222?text=Artwork");
+                background-size: cover;
+                background-position: center;
+                border-top: 1px solid #e0dcd0;
+                border-bottom: 1px solid #e0dcd0;
+            }
+            .card-body {
+                padding: 16px;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+            .card-section {
+                margin-bottom: 12px;
+            }
+            .card-label {
+                font-size: 0.75rem;
+                color: #827c6a;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+            .card-stats {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.85rem;
+                color: #3c3c3c;
+                background: #f5f3ee;
+                padding: 6px 8px;
+                border-radius: 6px;
+            }
+            .card-effect {
+                font-size: 0.9rem;
+                line-height: 1.4;
+                color: #353535;
+                background: #f8f6f2;
+                padding: 10px;
+                border-left: 3px solid #bba46e;
+                border-radius: 4px;
+            }
+            .card-tags {
+                font-size: 0.75rem;
+                color: #706b61;
+                font-style: italic;
+                margin-top: 8px;
+            }
+            .card-flavor {
+                font-family: "Cardo", serif;
+                font-style: italic;
+                font-size: 0.85rem;
+                color: #7c7263;
+                text-align: right;
+                border-top: 1px solid #e2ded1;
+                padding-top: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card" role="article" aria-label="Carte Light Freighter">
+            <div class="card-header">
+                <svg
+                    class="card-type-icon"
+                    aria-hidden="true"
+                    viewBox="0 0 24 24"
+                    focusable="false"
+                >
+                    <path
+                        d="M3 12l2-2v4l-2-2zm14-4v8h-2V8h2zm4-3H9v2h12V5zM4 17v-2h12v2H4z"
+                    />
+                </svg>
+                <div class="card-title">Light Freighter</div>
+                <div class="card-cost" aria-label="Coût : 2 Métal, 1 Cristal">
+                    <div class="cost-badge" title="2 Metal">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" /></svg
+                        >2
+                    </div>
+                    <div class="cost-badge" title="1 Crystal">
+                        <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <polygon points="12 2 19 21 5 21" /></svg
+                        >1
+                    </div>
+                </div>
+            </div>
+            <div class="card-art"></div>
+            <div class="card-body">
+                <div class="card-section">
+                    <div class="card-label">Ship Stats</div>
+                    <div class="card-stats">
+                        <span>Type: Transport</span>
+                        <span>Range: 2</span>
+                        <span>Cargo: 3</span>
+                    </div>
+                </div>
+                <div class="card-section">
+                    <div class="card-label">Effect</div>
+                    <div class="card-effect">
+                        Gain 1 extra Material when completing a delivery
+                        Mission.<br />
+                        • If the mission is on Titan: gain +1 Influence.
+                    </div>
+                </div>
+                <div class="card-tags">
+                    Tags: Transport • Utility • Civilian
+                </div>
+                <div class="card-flavor">
+                    "The workhorse of the outer system trade routes."
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
