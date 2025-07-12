@@ -130,7 +130,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
                         key={resource}
                         title={`${amount} ${resource}`}
                     >
-                        <img src="illustrations/icons/coin.png" />
+                        <img src="/Mini-projets/illustrations/icons/coin.png" />
                         {amount}
                     </div>
                 ))}
@@ -191,7 +191,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
                 style={{
                     backgroundImage: `url('${
                         card.illustration
-                            ? `illustrations/${card.illustration}`
+                            ? `/Mini-projets/illustrations/${card.illustration}`
                             : `https://placehold.co/350x250?text=${card.name}`
                     }')`,
                 }}
@@ -200,7 +200,11 @@ const Card: React.FC<CardProps> = ({ card }) => {
                     <div className="header-left">
                         <img
                             className="card-type-icon"
-                            src={"illustrations/icons/" + card.type + ".png"}
+                            src={
+                                "/Mini-projets/illustrations/icons/" +
+                                card.type +
+                                ".png"
+                            }
                         />
                         <div className="card-title">{card.name}</div>
                     </div>
