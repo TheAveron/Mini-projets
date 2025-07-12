@@ -6,7 +6,6 @@
                 "type": "ship",
                 "tags": [
                     "Freight",
-                    "Utility",
                     "Civilian"
                 ],
                 "cost": {
@@ -14,9 +13,9 @@
                 },
                 "range": 2,
                 "cargo": 3,
-                "effect": "Gain 1 extra Material when completing a delivery Mission.\n• If the mission is on Moon: gain +1 Influence.",
+                "bonus": "Gain 1 extra Material when completing a delivery Mission.\n• If the mission is on Moon: gain also+1 Influence.",
                 "flavor": "The workhorse of the inner system trade routes.",
-                "amount": 10,
+                "amount": 15,
                 "illustration": "light_freigter.png"
             },
             {
@@ -24,7 +23,6 @@
                 "type": "ship",
                 "tags": [
                     "Peoples",
-                    "Utility",
                     "Civilian"
                 ],
                 "cost": {
@@ -32,9 +30,9 @@
                 },
                 "range": 1,
                 "cargo": 1,
-                "effect": "Does nothing more than carryig people",
+                "bonus": "Gain one extra population on the planet",
                 "flavor": "Built for short trips and daily commutes — nothing more, nothing less.",
-                "amount": 10
+                "amount": 15
             }
         ],
         "infrastructure": [
@@ -46,8 +44,9 @@
                     "population": 2,
                     "size": 1
                 },
-                "effect": "Gain 1 Population each turn if placed on a colonized Planet.",
-                "flavor": "Home away from home, with 0.3g gravity and filtered views of Saturn's rings."
+                "bonus": "Gain 1 Population each turn if placed on a colonized Planet.",
+                "flavor": "Home away from home, with 0.3g gravity and filtered views of Saturn's rings.",
+                "amount": 10
             },
             {
                 "name": "Transport Grid",
@@ -57,9 +56,10 @@
                     "population": 10,
                     "size": 3
                 },
-                "effect": "For each pair of habitat in the planet, gain +1 population (and when new pairs of habitat are cnstructed)",
+                "bonus": "For each pair of habitat in the planet, gain +1 population (and when new pairs of habitat are cnstructed)",
                 "limit": "One per Planet",
-                "flavor": ""
+                "flavor": "",
+                "amount": 7
             }
         ],
         "mission": [
@@ -81,7 +81,7 @@
                 "cost": {
                     "money": 3
                 },
-                "effect": "May reroll 1 failed exploration attempt per turn.",
+                "bonus": "May reroll 1 failed exploration attempt per turn.",
                 "flavor": "If it's dusty, broken, and on fire — that's when I shine."
             }
         ]
@@ -95,19 +95,19 @@
                     "money": 0
                 },
                 "range": 1,
-                "effect": "Gain 1 Exploration Point each time a new Planet is discovered.",
+                "bonus": "Gain 1 Exploration Point each time a new Planet is discovered.",
                 "flavor": "First in, last out. Always."
             },
             {
                 "name": "Founder's Bonus",
-                "type": "company_effect",
-                "effect": "At the beginning of game, take 5 additional SpaceCoins and draw 1 Tech card.",
+                "type": "company_bonus",
+                "bonus": "At the beginning of game, take 5 additional SpaceCoins and draw 1 Tech card.",
                 "flavor": "Startup capital never hurt anyone."
             },
             {
                 "name": "Orbital Data Grid",
                 "type": "infrastructure",
-                "effect": "When you accomplish a Mission, gain 1 Influence.",
+                "bonus": "When you accomplish a Mission, gain 1 Influence.",
                 "flavor": "Nothing gets done without the Grid."
             }
         ]
@@ -116,18 +116,18 @@
         {
             "name": "Titan (Saturn Moon)",
             "type": "planet",
-            "access": "First 3 players to have range 3 rockets",
             "tags": [
                 "Outer Planet",
                 "Telluric",
                 "Medium Size"
             ],
-            "income": {
-                "rare_materials": 2
+            "effect": {
+                "Rare materials": 2
             },
+            "maxplayers": 3,
             "distance": 3,
             "size": 10,
-            "effect": "+1 SpaceCoin for completing Missions here",
+            "bonus": "+1 SpaceCoin for completing Missions here",
             "flavor": "Cold, toxic, and deeply profitable.",
             "illustration": "titan.png"
         }
@@ -136,10 +136,15 @@
         {
             "name": "Quantum Drives",
             "type": "technology",
+            "tags": [
+                "Rare",
+                "Transportation"
+            ],
             "cost": {
-                "money": 10
+                "money": 20,
+                "science": 10
             },
-            "effect": "All your Ships gain +1 Range.",
+            "bonus": "All your Ships gain +1 Range.",
             "flavor": "Fold space, skip traffic."
         },
         {
@@ -149,7 +154,7 @@
                 "money": 5,
                 "bases carbonnées": 1
             },
-            "effect": "Gain 1 extra Population during each Income Phase.",
+            "bonus": "Gain 1 extra Population during each Income Phase.",
             "flavor": "Evolve or die — preferably in the lab."
         }
     ],
@@ -158,21 +163,21 @@
             "name": "Solar Flare",
             "type": "event",
             "duration": "1 turn",
-            "effect": "All Infrastructure abilities are disabled this turn.",
+            "bonus": "All Infrastructure abilities are disabled this turn.",
             "flavor": "When the sun sneezes, we all catch fire."
         },
         {
             "name": "Trade Surge",
             "type": "event",
             "duration": "3 turns",
-            "effect": "Mission rewards yield +1 Money.",
+            "bonus": "Mission rewards yield +1 Money.",
             "flavor": "The stars have never been so open for business."
         },
         {
             "name": "Volcanic Eruption",
             "type": "event",
             "duration": "2 turns",
-            "effect": "Each player roll a dice, if the result is 4 or more, they can't launch rockets from this planet"
+            "bonus": "Each player roll a dice, if the result is 4 or more, they can't launch rockets from this planet"
         }
     ]
 }

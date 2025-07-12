@@ -1,4 +1,5 @@
 import React from "react";
+import HoverEffectCard from "./hover";
 
 // ------------------ Types ------------------
 interface BaseCard {
@@ -6,9 +7,11 @@ interface BaseCard {
     type: string;
     cost?: Record<string, number>;
     effect?: string;
+    bonus?: string;
     flavor?: string;
     tags?: string[];
     illustration?: string;
+    limit?: string;
 }
 
 interface ShipCard extends BaseCard {
@@ -24,6 +27,7 @@ interface PlanetCard extends BaseCard {
     access?: string;
     income?: Record<string, number>;
     mission_bonus?: string;
+    maxplayers?: number;
 }
 
 interface TechnologyCard extends BaseCard {
@@ -91,6 +95,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
                         </span>
                         <span>Distance: {card.distance}</span>
                         <span>Size: {card.size}</span>
+                        <span>Max Players: {card.maxplayers}</span>
                     </div>
                 </div>
             );
@@ -133,8 +138,48 @@ const Card: React.FC<CardProps> = ({ card }) => {
         );
     };
 
+    const renderConstraints = () => {
+        if (!card.limit) return null;
+        return (
+            <div className="card-section">
+                <div className="card-label">Constraints</div>
+                <div className="card-effect" style={{ whiteSpace: "pre-line" }}>
+                    {card.limit}
+                </div>
+            </div>
+        );
+    };
+
+    const renderBonus = () => {
+        if (!card.bonus) return null;
+        return (
+            <div className="card-section">
+                <div className="card-label">Bonus</div>
+                <div className="card-effect" style={{ whiteSpace: "pre-line" }}>
+                    {card.bonus}
+                </div>
+            </div>
+        );
+    };
+
+    const renderEffect = () => {
+        if (!card.effect) return null;
+        return (
+            <div className="card-section">
+                <div className="card-label">Gains</div>
+                <div className="card-effect" style={{ whiteSpace: "pre-line" }}>
+                    {Object.entries(card.effect).map(([resource, amount]) => (
+                        <>
+                            • {resource}: {amount}
+                        </>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
     return (
-        <div className={"card " + card.type}>
+        <>
             <div
                 className="card-art"
                 style={{
@@ -158,25 +203,21 @@ const Card: React.FC<CardProps> = ({ card }) => {
             </div>
             <div className="card-body">
                 {renderStats()}
-                <div className="card-section">
-                    <div className="card-label">Effect</div>
-                    <div
-                        className="card-effect"
-                        style={{ whiteSpace: "pre-line" }}
-                    >
-                        {card.effect}
-                    </div>
+                {renderConstraints()}
+                {renderEffect()}
+                {renderBonus()}
+                <div className="side-notes">
+                    {card.tags && (
+                        <div className="card-tags">
+                            Tags: {card.tags.join(" • ")}
+                        </div>
+                    )}
+                    {card.flavor && (
+                        <div className="card-flavor">"{card.flavor}"</div>
+                    )}
                 </div>
-                {card.tags && (
-                    <div className="card-tags">
-                        Tags: {card.tags.join(" • ")}
-                    </div>
-                )}
-                {card.flavor && (
-                    <div className="card-flavor">"{card.flavor}"</div>
-                )}
             </div>
-        </div>
+        </>
     );
 };
 
@@ -191,9 +232,9 @@ const CardList: React.FC<CardListProps> = ({ gameData }) => {
 
     return (
         <div className="card-list">
-            {cards.map((card, index) => (
-                <Card card={card} key={index} />
-            ))}
+            {cards.map((card, index) =>
+                HoverEffectCard(card.type, <Card card={card} key={index} />)
+            )}
         </div>
     );
 };
