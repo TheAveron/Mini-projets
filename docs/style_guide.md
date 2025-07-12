@@ -2,7 +2,7 @@
 
 ### 1. **Format & Composition**
 
--   **Panel proportions**: Use a 4:3 frame for all card art.
+-   **Panel proportions**: Use a 1024:888 frame for all card art.
 -   **Central focus**: Prioritize a clear, dominant subject—ship, planet, device, or character—with minimal distractions.
 -   **Clean framing**: Avoid ornate borders—think like a comic or field notebook panel.
 

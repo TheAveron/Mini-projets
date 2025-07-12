@@ -148,7 +148,8 @@
                 "science": 10
             },
             "effect": "All your Ships gain +1 Range.",
-            "flavor": "Fold space, skip traffic."
+            "flavor": "Fold space, skip traffic.",
+            "illustration": "quantum_drive.png"
         },
         {
             "name": "Genetic Uplift Lab",
