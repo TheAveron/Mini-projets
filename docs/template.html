@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Space Conquest Card Preview</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600&family=Caveat&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            body {
+                background: #080c12;
+                font-family: "Rajdhani", sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .card {
+                width: 64mm;
+                height: 89mm;
+                border-radius: 3mm;
+                overflow: hidden;
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+                display: flex;
+                flex-direction: column;
+                position: relative;
+                border: 3mm solid #ffffff;
+                background-color: #fff;
+            }
+
+            .card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 2mm;
+                background: linear-gradient(to right, #00c6ff, #0072ff);
+                color: #fff;
+                font-family: "Poppins", sans-serif;
+                font-size: 0.8rem;
+                font-weight: 600;
+                border-top-left-radius: 1mm;
+                border-top-right-radius: 1mm;
+            }
+
+            .card-art {
+                background-image: url("https://placehold.co/320x180/222/fff?text=Card+Art");
+                background-size: cover;
+                background-position: center;
+                max-height: 45mm;
+                border-top: 0.5mm solid #00ffff22;
+                border-bottom: 0.5mm solid #00ffff22;
+                justify-content: center;
+                display: block;
+            }
+
+            .card-stats {
+                display: flex;
+                justify-content: space-around;
+                background: rgba(0, 255, 255, 0.05);
+                padding: 2mm 0;
+                color: #ccc;
+                font-size: 0.5rem;
+            }
+
+            .card-body {
+                flex-grow: 1;
+                padding: 2mm 2mm;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                color: #ddd;
+                background: rgba(0, 0, 0, 0.2);
+                border-bottom-right-radius: 1mm;
+                border-bottom-left-radius: 1mm;
+            }
+
+            .card-effect {
+                font-size: 0.7rem;
+                line-height: 1.4;
+                margin-bottom: 10px;
+            }
+
+            .card-tags {
+                font-size: 0.8rem;
+                color: #8dd;
+            }
+
+            .card-flavor {
+                font-family: "Caveat", cursive;
+                font-size: 0.65rem;
+                color: #aaa;
+                text-align: right;
+                padding-top: 6px;
+                border-top: 1px solid #00ffff22;
+            }
+
+            .content {
+                background: #080c12;
+                border-bottom-right-radius: 1mm;
+                border-bottom-left-radius: 1mm;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <div class="card-header">
+                <span>Light Freighter</span>
+                <span>💰4</span>
+            </div>
+            <div class="card-art">
+                <img
+                    src="illustrations/light_freigter2.png"
+                    style="max-width: 100%; height: auto"
+                />
+            </div>
+            <div class="content">
+                <div class="card-stats">
+                    <span>🚀 Ship</span>
+                    <span>Range: 2</span>
+                    <span>Cargo: 3</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-effect">
+                        <strong>Effect:</strong> Gain 1 extra Material when
+                        completing a delivery Mission.<br />
+                        <em>• On Titan: gain +1 Influence.</em>
+                    </div>
+                    <div class="card-tags">Tags: 📦 Transport • 🔧 Utility</div>
+                    <div class="card-flavor">
+                        "The workhorse of the outer system trade routes."
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

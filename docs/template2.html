@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Carte Élégante - Pro Edition</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Inter:wght@400;600&family=Cardo:ital@1&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            :root {
+                --ship-color: #c4b9a6;
+                --e: (9 21 56);
+                --ship-accent: #bba46e;
+                --planet-color: #6b8e23;
+                --planet-accent: #74a35b;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                margin: 0;
+                background: #eae5dd;
+                font-family: "Inter", sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                column-gap: 2em;
+            }
+
+            .ship {
+                --color: var(--ship-color);
+                --accent: var(--ship-accent);
+            }
+
+            .planet {
+                --color: var(--planet-color);
+                --accent: var(--planet-accent);
+            }
+
+            .card {
+                width: 350px;
+                height: 500px;
+                background: #fdfcf9;
+                border: 10px solid var(--color);
+                border-radius: 12px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                position: relative;
+            }
+
+            .card-header {
+                background: rgba(243, 239, 230, 0.6); /*#f3efe6;*/
+                padding: 10px;
+                font-family: "EB Garamond", serif;
+                font-size: 1.3rem;
+                font-weight: 600;
+                color: #3a2e1f;
+                border-bottom: 1px solid #d6cbb7;
+                text-align: center;
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .card-subtitle {
+                font-size: 0.8rem;
+                color: #847e73;
+                text-align: center;
+                font-style: italic;
+            }
+
+            .card-art {
+                max-height: 320px;
+                height: 260px;
+                background-size: cover;
+                background-position: center;
+                border-bottom: 1px solid #e0dcd0;
+            }
+
+            .card-body {
+                padding: 16px;
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+            }
+
+            .card-section {
+                margin-bottom: 12px;
+            }
+
+            .card-label {
+                font-size: 0.55rem;
+                color: #827c6a;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+
+            .card-stats {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.65rem;
+                color: #3c3c3c;
+                background: #f5f3ee;
+                padding: 6px 8px;
+                border-radius: 6px;
+            }
+
+            .card-effect {
+                font-size: 0.7rem;
+                line-height: 1.4;
+                color: #353535;
+                background: #f8f6f2;
+                padding: 10px;
+                border-left: 3px solid var(--accent);
+                border-radius: 4px;
+            }
+
+            .card-tags {
+                font-size: 0.55rem;
+                color: #706b61;
+                font-style: italic;
+                margin-top: 8px;
+            }
+
+            .card-flavor {
+                font-family: "Cardo", serif;
+                font-style: italic;
+                font-size: 0.65rem;
+                color: #7c7263;
+                text-align: right;
+                border-top: 1px solid #e2ded1;
+                padding-top: 8px;
+            }
+
+            /*.icon {
+                border-radius: 100%;
+                font-size: 0.6em;
+                padding: 2%;
+            }*/
+            .card-type-icon {
+                width: 32px;
+                height: 32px;
+                margin-right: 12px;
+                flex-shrink: 0;
+                fill: #7c6e50;
+                opacity: 0.85;
+            }
+            .card-title {
+                flex-grow: 1;
+                user-select: none;
+            }
+            .card-cost {
+                display: flex;
+                gap: 6px;
+                align-items: center;
+            }
+            .cost-badge {
+                background: var(--accent);
+                color: #3a2e1f;
+                font-weight: 700;
+                font-size: 0.85rem;
+                padding: 4px 8px;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                box-shadow: inset 0 0 1px #00000022;
+            }
+            .cost-badge svg {
+                width: 18px;
+                height: 18px;
+                margin-right: 4px;
+                fill: #3a2e1f;
+            }
+
+            .header-left {
+                display: flex;
+                column-gap: 0.5em;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card ship">
+            <div
+                class="card-art"
+                style="
+                    background-image: url('/home/averon/Documents/Github/Mini-projets/projets/card_game/illustrations/light_freigter2.png');
+                "
+            >
+                <div class="card-header">
+                    <div class="header-left">
+                        <svg
+                            class="card-type-icon"
+                            aria-hidden="true"
+                            viewBox="0 0 24 24"
+                            focusable="false"
+                        >
+                            <!-- path ?? -->
+                        </svg>
+                        <div class="card-title">Light Freighter</div>
+                    </div>
+
+                    <div
+                        class="card-cost"
+                        aria-label="Coût : 2 Métal, 1 Cristal"
+                    >
+                        <div class="cost-badge" title="2 Metal">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10" /></svg
+                            >2
+                        </div>
+                        <div class="cost-badge" title="1 Crystal">
+                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                <polygon points="12 2 19 21 5 21" /></svg
+                            >1
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-section">
+                    <div class="card-label">Ship Stats</div>
+                    <div class="card-stats">
+                        <span>Type: Transport</span>
+                        <span>Range: 2</span>
+                        <span>Cargo: 3</span>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <div class="card-label">Effect</div>
+                    <div class="card-effect">
+                        Gain 1 extra Material when completing a delivery
+                        Mission.<br />
+                        • If the mission is on Moon: gain +1 Influence.
+                    </div>
+                </div>
+
+                <div class="card-tags">
+                    Tags: Transport • Utility • Civilian
+                </div>
+                <div class="card-flavor">
+                    "The workhorse of the outer system trade routes."
+                </div>
+            </div>
+        </div>
+        <div class="card planet">
+            <div
+                class="card-art"
+                style="background-image: url('illustrations/titan.png')"
+            >
+                <div class="card-header">
+                    <div class="header-left">
+                        <svg class="card-type-icon" viewBox="0 0 24 24">
+                            <!-- path ?? -->
+                        </svg>
+                        <div class="card-title">Titan</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-section">
+                    <div class="card-label">Planet Stats</div>
+                    <div class="card-stats">
+                        <span>Type: Telluric</span>
+                        <span>Distance: 3</span>
+                        <span>Size: 10</span>
+                    </div>
+                </div>
+                <div class="card-section">
+                    <div class="card-label">Effect</div>
+                    <div class="card-effect">
+                        Provides +1 bonus to all Trade missions.<br />
+                        May only be accessed by players with advanced
+                        propulsion.
+                    </div>
+                </div>
+                <div class="card-tags">
+                    Tags: Outer Planet • Telluric • Medium Size
+                </div>
+                <div class="card-flavor">
+                    "Shrouded in methane clouds, Titan remains elusive and
+                    promising."
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
