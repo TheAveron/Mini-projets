@@ -29,7 +29,17 @@ const gameData: CardListProps["gameData"] = {
 function App() {
     return (
         <div className="App">
-            <h1>Stellar Odyssey - The Card game </h1>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    placeContent: "space-between",
+                    alignItems: "center",
+                }}
+            >
+                <h1>Stellar Odyssey - The Card game </h1>
+                <a href="style_guide">Design guide</a>
+            </div>
             <br />
             <h2>Gallery</h2>
             <CardList gameData={gameData} />
