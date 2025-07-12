@@ -191,7 +191,7 @@ const Card: React.FC<CardProps> = ({ card }) => {
                 style={{
                     backgroundImage: `url('${
                         card.illustration
-                            ? `/illustrations/${card.illustration}`
+                            ? `illustrations/${card.illustration}`
                             : `https://placehold.co/350x250?text=${card.name}`
                     }')`,
                 }}
