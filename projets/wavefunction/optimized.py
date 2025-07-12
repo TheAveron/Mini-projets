@@ -84,7 +84,7 @@ class Cell:
         self.domain = BITMASK  # Bitmask of possible tiles (all set)
         self.collapsed = False
 
-    #def is_collapsed(self) -> bool:
+    # def is_collapsed(self) -> bool:
     #    return bin(self.domain).count("1") == 1
 
     def entropy(self) -> int:
@@ -136,7 +136,7 @@ class World:
             (x + dx, y + dy) for dx, dy in DIRECTIONS if self.in_bounds(x + dx, y + dy)
         ]
 
-    #@profile_with_memory
+    # @profile_with_memory
     def run(self):
         # Start with one random seed
         sx, sy = random.randint(0, self.size - 1), random.randint(0, self.size - 1)
@@ -237,7 +237,7 @@ def post_process_cleaner(world, iterations=3):
                 for t in neighbor_tiles:
                     tile_counts[t] = tile_counts.get(t, 0) + 1
 
-                majority_tile = max(tile_counts, key=tile_counts.get)
+                majority_tile = max(tile_counts, key=tile_counts.get)  # type: ignore
                 current_tile = cell.get_possible_ids()[0]
 
                 # If current tile differs from majority and majority is strong enough, flip it
@@ -289,7 +289,7 @@ def post_process_cleaner_respecting_rules(world, iterations=3):
                     tile_counts[tid] = tile_counts.get(tid, 0) + 1
 
                 # Most common neighbor tile
-                majority_tile = max(tile_counts, key=tile_counts.get)
+                majority_tile = max(tile_counts, key=tile_counts.get)  # type: ignore
                 if majority_tile == current_tile:
                     continue  # already matches
 

@@ -168,11 +168,17 @@ const Card: React.FC<CardProps> = ({ card }) => {
             <div className="card-section">
                 <div className="card-label">Gains</div>
                 <div className="card-effect" style={{ whiteSpace: "pre-line" }}>
-                    {Object.entries(card.effect).map(([resource, amount]) => (
-                        <>
-                            • {resource}: {amount}
-                        </>
-                    ))}
+                    {typeof card.effect === "string" ? (
+                        <>{card.effect}</>
+                    ) : card.effect && typeof card.effect === "object" ? (
+                        Object.entries(card.effect).map(
+                            ([resource, amount]) => (
+                                <React.Fragment key={resource}>
+                                    • {String(resource)}: {String(amount)}
+                                </React.Fragment>
+                            )
+                        )
+                    ) : null}
                 </div>
             </div>
         );

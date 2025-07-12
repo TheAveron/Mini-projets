@@ -13,7 +13,8 @@
                 },
                 "range": 2,
                 "cargo": 3,
-                "bonus": "Gain 1 extra Material when completing a delivery Mission.\n• If the mission is on Moon: gain also+1 Influence.",
+                "effect": "Gain 1 extra Material when completing a delivery Mission.",
+                "bonus": "If the mission is on Moon, gain also +1 Influence.",
                 "flavor": "The workhorse of the inner system trade routes.",
                 "amount": 15,
                 "illustration": "light_freigter.png"
@@ -30,7 +31,9 @@
                 },
                 "range": 1,
                 "cargo": 1,
-                "bonus": "Gain one extra population on the planet",
+                "effect": {
+                    "Population": 1
+                },
                 "flavor": "Built for short trips and daily commutes — nothing more, nothing less.",
                 "amount": 15
             }
@@ -44,7 +47,7 @@
                     "population": 2,
                     "size": 1
                 },
-                "bonus": "Gain 1 Population each turn if placed on a colonized Planet.",
+                "effect": "Gain 1 Population each turn if placed on a colonized Planet.",
                 "flavor": "Home away from home, with 0.3g gravity and filtered views of Saturn's rings.",
                 "amount": 10
             },
@@ -56,7 +59,7 @@
                     "population": 10,
                     "size": 3
                 },
-                "bonus": "For each pair of habitat in the planet, gain +1 population (and when new pairs of habitat are cnstructed)",
+                "effect": "For each pair of habitat in the planet, gain +1 population (and when new pairs of habitat are constructed)",
                 "limit": "One per Planet",
                 "flavor": "",
                 "amount": 7
@@ -66,7 +69,7 @@
             {
                 "name": "Moon Water Rush",
                 "type": "mission",
-                "objective": "Deliver 2 Water units to Luna",
+                "objective": "Deliver 2 Water units to Luna.",
                 "reward": {
                     "influence": 3,
                     "tech_card": 1
@@ -125,7 +128,7 @@
                 "Rare materials": 2
             },
             "maxplayers": 3,
-            "distance": 3,
+            "distance": 4,
             "size": 10,
             "bonus": "+1 SpaceCoin for completing Missions here",
             "flavor": "Cold, toxic, and deeply profitable.",
@@ -144,18 +147,23 @@
                 "money": 20,
                 "science": 10
             },
-            "bonus": "All your Ships gain +1 Range.",
+            "effect": "All your Ships gain +1 Range.",
             "flavor": "Fold space, skip traffic."
         },
         {
             "name": "Genetic Uplift Lab",
             "type": "technology",
+            "tags": [
+                "Common",
+                "Population"
+            ],
             "cost": {
                 "money": 5,
                 "bases carbonnées": 1
             },
-            "bonus": "Gain 1 extra Population during each Income Phase.",
-            "flavor": "Evolve or die — preferably in the lab."
+            "effect": "Gain 1 extra Population during each Income Phase.",
+            "flavor": "Evolve or die — preferably in the lab.",
+            "amount": 6
         }
     ],
     "event_cards": [
@@ -163,21 +171,24 @@
             "name": "Solar Flare",
             "type": "event",
             "duration": "1 turn",
-            "bonus": "All Infrastructure abilities are disabled this turn.",
-            "flavor": "When the sun sneezes, we all catch fire."
+            "effect": "All Infrastructure abilities are disabled this turn.",
+            "flavor": "When the sun sneezes, we all catch fire.",
+            "amount": 5
         },
         {
             "name": "Trade Surge",
             "type": "event",
             "duration": "3 turns",
-            "bonus": "Mission rewards yield +1 Money.",
-            "flavor": "The stars have never been so open for business."
+            "effect": "Mission rewards yield +1 Money.",
+            "flavor": "The stars have never been so open for business.",
+            "amount": 2
         },
         {
             "name": "Volcanic Eruption",
             "type": "event",
             "duration": "2 turns",
-            "bonus": "Each player roll a dice, if the result is 4 or more, they can't launch rockets from this planet"
+            "effect": "Each player roll a dice, if the result is 4 or more, they can't launch rockets from this planet.",
+            "amount": 3
         }
     ]
 }
