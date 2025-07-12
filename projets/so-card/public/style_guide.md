@@ -55,17 +55,3 @@
 | **Planet**    | Hemisphere view, stylized terrain + ring/cloud patterns | Soft horizon glow, minimal depth cues                       |
 | **Tech**      | Device or module on plain background                    | Circuit lines, small labels, slight smudge                  |
 | **Character** | Astronaut or engineer bust                              | Functional suit, hands holding tool/map, minimal expression |
-
----
-
-### ✅ Next Steps
-
--   Share this guide with your artist(s) to ensure consistent style across all cards.
--   Start commissioning a set of 5–10 “key art” assets covering different card types.
--   Use approved art to create a color and style reference sheet for future use.
-
----
-
-Let me know if you’d like me to help mock up a **visual reference sheet** or **layout examples** next!
-
-58/45
